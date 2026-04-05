@@ -1,6 +1,6 @@
 # n8n Node for OpenClaw Gateway HTTP API
 
-[![npm version](https://img.shields.io/npm/v/npm-nodes-openclaw-chat)](https://www.npmjs.com/package/npm-nodes-openclaw-chat)
+[![npm version](https://img.shields.io/npm/v/n8n-nodes-openclaw-chat)](https://www.npmjs.com/package/n8n-nodes-openclaw-chat)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 This n8n community node provides integration with **OpenClaw Gateway HTTP API**, enabling you to interact with OpenClaw agents directly from your n8n workflows. It supports chat completions, embeddings, model listing, OpenResponses, and direct tool invocation.
@@ -20,12 +20,12 @@ This n8n community node provides integration with **OpenClaw Gateway HTTP API**,
 ### Method 1: Community Nodes (Recommended)
 1. Go to **Settings → Community Nodes** in your n8n instance
 2. Click **"Install"**
-3. Enter `npm-nodes-openclaw-chat` and click **"Install"**
+3. Enter `n8n-nodes-openclaw-chat` and click **"Install"**
 
 ### Method 2: Manual Installation
 ```bash
 cd ~/.n8n/nodes
-npm install npm-nodes-openclaw-chat
+npm install n8n-nodes-openclaw-chat
 ```
 
 ### Method 3: Docker Deployment
@@ -35,7 +35,7 @@ volumes:
   - ~/.n8n/nodes:/home/node/.n8n/nodes
 
 environment:
-  - N8N_CUSTOM_EXTENSIONS=npm-nodes-openclaw-chat
+  - N8N_CUSTOM_EXTENSIONS=n8n-nodes-openclaw-chat
 ```
 
 ## Configuration
@@ -296,7 +296,7 @@ The node includes comprehensive error handling:
 
 ### Project Structure
 ```
-npm-nodes-openclaw-chat/
+n8n-nodes-openclaw-chat/
 ├── src/
 │   ├── credentials/
 │   │   └── OpenClawApi.credentials.ts
@@ -313,8 +313,8 @@ npm-nodes-openclaw-chat/
 ### Build from Source
 ```bash
 # Clone repository
-git clone https://github.com/EncryptShawn/npm-nodes-openclaw-chat.git
-cd npm-nodes-openclaw-chat
+git clone https://github.com/EncryptShawn/n8n-nodes-openclaw-chat.git
+cd n8n-nodes-openclaw-chat
 
 # Install dependencies
 npm install
@@ -333,7 +333,7 @@ npm run lint
 1. Build the node: `npm run build`
 2. Copy to n8n custom nodes directory:
    ```bash
-   cp -r dist ~/.n8n/custom/npm-nodes-openclaw-chat
+   cp -r dist ~/.n8n/custom/n8n-nodes-openclaw-chat
    ```
 3. Restart n8n
 4. The node will appear as **"OpenClaw Chat"** in the node panel
@@ -419,7 +419,7 @@ MIT © [EncryptShawn](https://github.com/EncryptShawn)
 
 ## Support
 
-- **Issues**: [GitHub Issues](https://github.com/EncryptShawn/npm-nodes-openclaw-chat/issues)
+- **Issues**: [GitHub Issues](https://github.com/EncryptShawn/n8n-nodes-openclaw-chat/issues)
 - **Documentation**: [OpenClaw Docs](https://docs.openclaw.ai)
 - **Community**: [OpenClaw Discord](https://discord.com/invite/clawd)
 

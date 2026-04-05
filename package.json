@@ -1,5 +1,5 @@
 {
-  "name": "npm-nodes-openclaw-chat",
+  "name": "n8n-nodes-openclaw-chat",
   "version": "1.0.0",
   "description": "n8n node to interact with OpenClaw Gateway HTTP API (chat completions, embeddings, models, responses, tools)",
   "keywords": [
