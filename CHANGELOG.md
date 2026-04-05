@@ -5,6 +5,24 @@ All notable changes to the `n8n-nodes-openclaw-chat` project will be documented 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.7] - 2026-04-05
+
+### Added
+- Tool-specific parameter fields for key OpenClaw tools:
+  - `exec`: command, yieldMs, background, timeout, elevated, host, pty
+  - `web_search`: query, count
+  - `web_fetch`: url, extractMode, maxChars
+  - `memory_search`: query, maxResults
+  - `memory_get`: path, from, lines
+  - `sessions_list`: limit
+  - `sessions_send`: sessionKey, message
+- Structured UI with collection-based parameter groups
+- JSON arguments fallback for remaining tools
+
+### Fixed
+- Proper parameter dependency resolution by using displayOptions at collection level
+- Custom SVG logo restored and should now display correctly in n8n
+
 ## [1.0.6] - 2026-04-05
 
 ### Fixed

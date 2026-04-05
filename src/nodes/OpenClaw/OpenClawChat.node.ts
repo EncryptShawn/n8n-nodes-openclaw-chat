@@ -596,7 +596,7 @@ export class OpenClawChat implements INodeType {
         name: 'action',
         type: 'string',
         default: '',
-        description: 'Action for the tool (e.g., "json" for sessions_list)',
+        description: 'Action for the tool (e.g., "list" for sessions_list, "poll" for process)',
         displayOptions: {
           show: {
             resource: ['tool'],
@@ -604,16 +604,300 @@ export class OpenClawChat implements INodeType {
           },
         },
       },
+      // exec tool parameters
       {
-        displayName: 'Arguments',
-        name: 'arguments',
-        type: 'json',
-        default: '{}',
-        description: 'JSON object of arguments to pass to the tool',
+        displayName: 'Exec Parameters',
+        name: 'execParameters',
+        type: 'collection',
+        placeholder: 'Add Parameter',
+        default: {},
         displayOptions: {
           show: {
             resource: ['tool'],
             operation: ['invoke'],
+            toolName: ['exec'],
+          },
+        },
+        options: [
+          {
+            displayName: 'Command',
+            name: 'command',
+            type: 'string',
+            default: '',
+            description: 'Shell command to execute',
+            required: true,
+          },
+          {
+            displayName: 'Yield Milliseconds',
+            name: 'yieldMs',
+            type: 'number',
+            default: 10000,
+            description: 'Auto-background after timeout (default 10000)',
+          },
+          {
+            displayName: 'Background',
+            name: 'background',
+            type: 'boolean',
+            default: false,
+            description: 'Immediate background mode',
+          },
+          {
+            displayName: 'Timeout',
+            name: 'timeout',
+            type: 'number',
+            default: 1800,
+            description: 'Seconds; kills process if exceeded (default 1800)',
+          },
+          {
+            displayName: 'Elevated',
+            name: 'elevated',
+            type: 'boolean',
+            default: false,
+            description: 'Run on host if elevated mode is enabled',
+          },
+          {
+            displayName: 'Host',
+            name: 'host',
+            type: 'options',
+            options: [
+              { name: 'Sandbox', value: 'sandbox' },
+              { name: 'Gateway', value: 'gateway' },
+              { name: 'Node', value: 'node' },
+            ],
+            default: 'sandbox',
+            description: 'Host to run command on',
+          },
+          {
+            displayName: 'PTY',
+            name: 'pty',
+            type: 'boolean',
+            default: false,
+            description: 'Use a real TTY',
+          },
+        ],
+      },
+      // web_search tool parameters
+      {
+        displayName: 'Web Search Parameters',
+        name: 'webSearchParameters',
+        type: 'collection',
+        placeholder: 'Add Parameter',
+        default: {},
+        displayOptions: {
+          show: {
+            resource: ['tool'],
+            operation: ['invoke'],
+            toolName: ['web_search'],
+          },
+        },
+        options: [
+          {
+            displayName: 'Query',
+            name: 'query',
+            type: 'string',
+            default: '',
+            description: 'Search query',
+            required: true,
+          },
+          {
+            displayName: 'Count',
+            name: 'count',
+            type: 'number',
+            default: 10,
+            description: 'Number of results to return (1-10)',
+            typeOptions: {
+              minValue: 1,
+              maxValue: 10,
+            },
+          },
+        ],
+      },
+      // web_fetch tool parameters
+      {
+        displayName: 'Web Fetch Parameters',
+        name: 'webFetchParameters',
+        type: 'collection',
+        placeholder: 'Add Parameter',
+        default: {},
+        displayOptions: {
+          show: {
+            resource: ['tool'],
+            operation: ['invoke'],
+            toolName: ['web_fetch'],
+          },
+        },
+        options: [
+          {
+            displayName: 'URL',
+            name: 'url',
+            type: 'string',
+            default: '',
+            description: 'URL to fetch',
+            required: true,
+          },
+          {
+            displayName: 'Extract Mode',
+            name: 'extractMode',
+            type: 'options',
+            options: [
+              { name: 'Markdown', value: 'markdown' },
+              { name: 'Text', value: 'text' },
+            ],
+            default: 'markdown',
+            description: 'Extraction mode',
+          },
+          {
+            displayName: 'Max Characters',
+            name: 'maxChars',
+            type: 'number',
+            default: 50000,
+            description: 'Maximum characters to return',
+          },
+        ],
+      },
+      // memory_search tool parameters
+      {
+        displayName: 'Memory Search Parameters',
+        name: 'memorySearchParameters',
+        type: 'collection',
+        placeholder: 'Add Parameter',
+        default: {},
+        displayOptions: {
+          show: {
+            resource: ['tool'],
+            operation: ['invoke'],
+            toolName: ['memory_search'],
+          },
+        },
+        options: [
+          {
+            displayName: 'Query',
+            name: 'query',
+            type: 'string',
+            default: '',
+            description: 'Search query for memory',
+            required: true,
+          },
+          {
+            displayName: 'Max Results',
+            name: 'maxResults',
+            type: 'number',
+            default: 10,
+            description: 'Maximum number of results to return',
+          },
+        ],
+      },
+      // memory_get tool parameters
+      {
+        displayName: 'Memory Get Parameters',
+        name: 'memoryGetParameters',
+        type: 'collection',
+        placeholder: 'Add Parameter',
+        default: {},
+        displayOptions: {
+          show: {
+            resource: ['tool'],
+            operation: ['invoke'],
+            toolName: ['memory_get'],
+          },
+        },
+        options: [
+          {
+            displayName: 'Path',
+            name: 'path',
+            type: 'string',
+            default: '',
+            description: 'Path to memory file',
+            required: true,
+          },
+          {
+            displayName: 'From Line',
+            name: 'from',
+            type: 'number',
+            default: 1,
+            description: 'Line number to start reading from (1-indexed)',
+          },
+          {
+            displayName: 'Lines',
+            name: 'lines',
+            type: 'number',
+            default: 100,
+            description: 'Maximum number of lines to read',
+          },
+        ],
+      },
+      // sessions_list tool parameters
+      {
+        displayName: 'Sessions List Parameters',
+        name: 'sessionsListParameters',
+        type: 'collection',
+        placeholder: 'Add Parameter',
+        default: {},
+        displayOptions: {
+          show: {
+            resource: ['tool'],
+            operation: ['invoke'],
+            toolName: ['sessions_list'],
+          },
+        },
+        options: [
+          {
+            displayName: 'Limit',
+            name: 'limit',
+            type: 'number',
+            default: 50,
+            description: 'Maximum number of sessions to list',
+          },
+        ],
+      },
+      // sessions_send tool parameters
+      {
+        displayName: 'Sessions Send Parameters',
+        name: 'sessionsSendParameters',
+        type: 'collection',
+        placeholder: 'Add Parameter',
+        default: {},
+        displayOptions: {
+          show: {
+            resource: ['tool'],
+            operation: ['invoke'],
+            toolName: ['sessions_send'],
+          },
+        },
+        options: [
+          {
+            displayName: 'Session Key',
+            name: 'sessionKey',
+            type: 'string',
+            default: '',
+            description: 'Target session key or ID',
+            required: true,
+          },
+          {
+            displayName: 'Message',
+            name: 'message',
+            type: 'string',
+            default: '',
+            description: 'Message to send',
+            typeOptions: {
+              rows: 4,
+            },
+            required: true,
+          },
+        ],
+      },
+      // JSON arguments fallback for other tools
+      {
+        displayName: 'JSON Arguments',
+        name: 'jsonArguments',
+        type: 'json',
+        default: '{}',
+        description: 'JSON object of arguments (for tools without specific parameters)',
+        displayOptions: {
+          show: {
+            resource: ['tool'],
+            operation: ['invoke'],
+            toolName: ['process', 'browser', 'canvas', 'nodes', 'image', 'image_generation', 'message', 'cron', 'gateway', 'sessions_history', 'sessions_spawn', 'session_status', 'agents_list', 'tts'],
           },
         },
       },
