@@ -30,6 +30,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Removed package-lock.json from version control (added to .gitignore)
 - Improved type safety by replacing `unknown` with specific types where possible
 
+## [1.0.2] - 2026-04-05
+
+### Added
+- Validation for credentials (Base URL and API Token) with clear error messages
+- Validation for required fields: messages for chat completion, input for embedding and response
+- Response structure validation to catch malformed API responses
+
+### Fixed
+- Potential undefined baseUrl error causing "Cannot read properties of undefined (reading 'replace')"
+- Improved error handling for missing or invalid credentials
+- Ensure requests are properly sent and validated before returning success
+
 ## [1.0.1] - 2026-04-05
 
 ### Changed

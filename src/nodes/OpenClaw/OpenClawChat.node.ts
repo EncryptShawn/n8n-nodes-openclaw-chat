@@ -503,30 +503,52 @@ export class OpenClawChat implements INodeType {
       try {
         if (resource === 'chatCompletion') {
           if (operation === 'create') {
-            // Implementation will be added in GenericFunctions
+            const messages = this.getNodeParameter('messages.message', i, []) as any[];
+            if (messages.length === 0) {
+              throw new Error('At least one message is required for chat completion');
+            }
+            // Validate each message has role and content
+            for (const [index, msg] of messages.entries()) {
+              if (!msg.role || !msg.content) {
+                throw new Error(`Message ${index + 1} is missing role or content`);
+              }
+            }
+            const body = {
+              model: this.getNodeParameter('model', i) as string,
+              messages,
+              stream: false,
+              ...this.getNodeParameter('additionalFields', i, {}),
+            };
             const response = await openClawApiRequest.call(this, {
               method: 'POST',
               url: '/v1/chat/completions',
-              body: {
-                model: this.getNodeParameter('model', i) as string,
-                messages: this.getNodeParameter('messages.message', i, []) as any[],
-                stream: false,
-                ...this.getNodeParameter('additionalFields', i, {}),
-              },
+              body,
             });
+            // Validate response structure
+            if (!response || typeof response !== 'object') {
+              throw new Error('Invalid response received from OpenClaw API');
+            }
             returnData.push({ json: response });
           }
         } else if (resource === 'embedding' && operation === 'create') {
+          const input = this.getNodeParameter('input', i) as string;
+          if (!input.trim()) {
+            throw new Error('Input text is required for embedding');
+          }
+          const body = {
+            model: this.getNodeParameter('model', i) as string,
+            input,
+            encoding_format: this.getNodeParameter('encodingFormat', i, 'float') as string,
+            user: this.getNodeParameter('user', i, '') as string,
+          };
           const response = await openClawApiRequest.call(this, {
             method: 'POST',
             url: '/v1/embeddings',
-            body: {
-              model: this.getNodeParameter('model', i) as string,
-              input: this.getNodeParameter('input', i) as string,
-              encoding_format: this.getNodeParameter('encodingFormat', i, 'float') as string,
-              user: this.getNodeParameter('user', i, '') as string,
-            },
+            body,
           });
+          if (!response || typeof response !== 'object') {
+            throw new Error('Invalid response received from OpenClaw API');
+          }
           returnData.push({ json: response });
         } else if (resource === 'model' && operation === 'list') {
           const response = await openClawApiRequest.call(this, {
@@ -536,16 +558,24 @@ export class OpenClawChat implements INodeType {
           returnData.push({ json: response });
         } else if (resource === 'response') {
           if (operation === 'create') {
+            const input = this.getNodeParameter('input', i) as string;
+            if (!input.trim()) {
+              throw new Error('Input text is required for response');
+            }
+            const body = {
+              model: this.getNodeParameter('model', i) as string,
+              input,
+              stream: false,
+              ...this.getNodeParameter('additionalFields', i, {}),
+            };
             const response = await openClawApiRequest.call(this, {
               method: 'POST',
               url: '/v1/responses',
-              body: {
-                model: this.getNodeParameter('model', i) as string,
-                input: this.getNodeParameter('input', i) as string,
-                stream: false,
-                ...this.getNodeParameter('additionalFields', i, {}),
-              },
+              body,
             });
+            if (!response || typeof response !== 'object') {
+              throw new Error('Invalid response received from OpenClaw API');
+            }
             returnData.push({ json: response });
           }
         } else if (resource === 'tool' && operation === 'invoke') {

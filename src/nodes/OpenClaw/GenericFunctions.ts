@@ -26,6 +26,13 @@ export async function openClawApiRequest(
 ): Promise<any> {
   const credentials = await this.getCredentials('openClawApi');
 
+  if (!credentials.baseUrl) {
+    throw new Error('Base URL is missing in OpenClaw credentials. Please check your credentials configuration.');
+  }
+  if (!credentials.apiToken) {
+    throw new Error('API Token is missing in OpenClaw credentials. Please check your credentials configuration.');
+  }
+
   const baseUrl = (credentials.baseUrl as string).replace(/\/$/, '');
   const apiToken = credentials.apiToken as string;
   const allowInsecureHttps = credentials.allowInsecureHttps as boolean || false;
