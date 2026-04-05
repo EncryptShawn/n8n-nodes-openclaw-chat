@@ -30,6 +30,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Removed package-lock.json from version control (added to .gitignore)
 - Improved type safety by replacing `unknown` with specific types where possible
 
+## [1.0.3] - 2026-04-05
+
+### Added
+- Tool selection dropdown with all OpenClaw built-in tools
+- Descriptions for each tool to guide users
+
+### Changed
+- Tool Name field changed from free-text string to options dropdown
+
 ## [1.0.2] - 2026-04-05
 
 ### Added
