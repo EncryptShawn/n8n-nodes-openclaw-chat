@@ -81,12 +81,6 @@ export class OpenClawChat implements INodeType {
             description: 'Create a chat completion',
             action: 'Create a chat completion',
           },
-          {
-            name: 'Create Streaming',
-            value: 'createStreaming',
-            description: 'Create a streaming chat completion (SSE)',
-            action: 'Create a streaming chat completion',
-          },
         ],
         default: 'create',
       },
@@ -147,12 +141,6 @@ export class OpenClawChat implements INodeType {
             description: 'Create a response (OpenResponses format)',
             action: 'Create a response',
           },
-          {
-            name: 'Create Streaming',
-            value: 'createStreaming',
-            description: 'Create a streaming response (SSE)',
-            action: 'Create a streaming response',
-          },
         ],
         default: 'create',
       },
@@ -186,7 +174,7 @@ export class OpenClawChat implements INodeType {
         displayOptions: {
           show: {
             resource: ['chatCompletion'],
-            operation: ['create', 'createStreaming'],
+            operation: ['create'],
           },
         },
       },
@@ -202,7 +190,7 @@ export class OpenClawChat implements INodeType {
         displayOptions: {
           show: {
             resource: ['chatCompletion'],
-            operation: ['create', 'createStreaming'],
+            operation: ['create'],
           },
         },
         options: [
@@ -243,19 +231,7 @@ export class OpenClawChat implements INodeType {
           },
         ],
       },
-      {
-        displayName: 'Stream',
-        name: 'stream',
-        type: 'boolean',
-        default: false,
-        description: 'Whether to stream back partial progress',
-        displayOptions: {
-          show: {
-            resource: ['chatCompletion'],
-            operation: ['createStreaming'],
-          },
-        },
-      },
+
       {
         displayName: 'Additional Fields',
         name: 'additionalFields',
@@ -265,7 +241,7 @@ export class OpenClawChat implements INodeType {
         displayOptions: {
           show: {
             resource: ['chatCompletion'],
-            operation: ['create', 'createStreaming'],
+            operation: ['create'],
           },
         },
         options: [
@@ -416,7 +392,7 @@ export class OpenClawChat implements INodeType {
         displayOptions: {
           show: {
             resource: ['response'],
-            operation: ['create', 'createStreaming'],
+            operation: ['create'],
           },
         },
       },
@@ -432,23 +408,11 @@ export class OpenClawChat implements INodeType {
         displayOptions: {
           show: {
             resource: ['response'],
-            operation: ['create', 'createStreaming'],
+            operation: ['create'],
           },
         },
       },
-      {
-        displayName: 'Stream',
-        name: 'stream',
-        type: 'boolean',
-        default: false,
-        description: 'Whether to stream back partial progress',
-        displayOptions: {
-          show: {
-            resource: ['response'],
-            operation: ['createStreaming'],
-          },
-        },
-      },
+
       {
         displayName: 'Additional Fields',
         name: 'additionalFields',
@@ -458,7 +422,7 @@ export class OpenClawChat implements INodeType {
         displayOptions: {
           show: {
             resource: ['response'],
-            operation: ['create', 'createStreaming'],
+            operation: ['create'],
           },
         },
         options: [
@@ -538,7 +502,7 @@ export class OpenClawChat implements INodeType {
     for (let i = 0; i < items.length; i++) {
       try {
         if (resource === 'chatCompletion') {
-          if (operation === 'create' || operation === 'createStreaming') {
+          if (operation === 'create') {
             // Implementation will be added in GenericFunctions
             const response = await openClawApiRequest.call(this, {
               method: 'POST',
@@ -546,7 +510,7 @@ export class OpenClawChat implements INodeType {
               body: {
                 model: this.getNodeParameter('model', i) as string,
                 messages: this.getNodeParameter('messages.message', i, []) as any[],
-                stream: operation === 'createStreaming' || this.getNodeParameter('stream', i, false) as boolean,
+                stream: false,
                 ...this.getNodeParameter('additionalFields', i, {}),
               },
             });
@@ -571,14 +535,14 @@ export class OpenClawChat implements INodeType {
           });
           returnData.push({ json: response });
         } else if (resource === 'response') {
-          if (operation === 'create' || operation === 'createStreaming') {
+          if (operation === 'create') {
             const response = await openClawApiRequest.call(this, {
               method: 'POST',
               url: '/v1/responses',
               body: {
                 model: this.getNodeParameter('model', i) as string,
                 input: this.getNodeParameter('input', i) as string,
-                stream: operation === 'createStreaming' || this.getNodeParameter('stream', i, false) as boolean,
+                stream: false,
                 ...this.getNodeParameter('additionalFields', i, {}),
               },
             });
