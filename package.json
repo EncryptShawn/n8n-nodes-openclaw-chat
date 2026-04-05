@@ -25,12 +25,12 @@
   },
   "main": "dist/index.js",
   "scripts": {
-    "build": "npx --package typescript tsc",
-    "dev": "npx --package typescript tsc --watch",
-    "lint": "npx eslint . --ext .ts",
-    "lint:fix": "npx eslint . --ext .ts --fix",
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "lint": "eslint . --ext .ts",
+    "lint:fix": "eslint . --ext .ts --fix",
     "prepublishOnly": "npm run build",
-    "test": "npx jest"
+    "test": "jest"
   },
   "files": [
     "dist",
