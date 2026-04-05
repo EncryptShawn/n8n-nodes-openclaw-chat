@@ -17,7 +17,7 @@ export class OpenClawChat implements INodeType {
   description: INodeTypeDescription = {
     displayName: 'OpenClaw Chat',
     name: 'openClawChat',
-    icon: 'file:openclaw.svg',
+    icon: 'file:8claw-icon.svg',
     group: ['transform'],
     version: 1,
     subtitle: '={{$parameter["resource"] + ": " + $parameter["operation"]}}',
