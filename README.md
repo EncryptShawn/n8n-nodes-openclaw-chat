@@ -401,6 +401,18 @@ For complete OpenClaw Gateway HTTP API documentation, see:
 
 Please follow the [n8n Node Development Guidelines](https://docs.n8n.io/integrations/creating-nodes/).
 
+## Example Workflows
+
+Check the [`examples/`](examples/) directory for ready-to-import n8n workflows:
+
+- **Basic Chat Completion** (`examples/basic-chat-completion.json`) – Simple manual trigger asking OpenClaw to list installed skills
+
+To import a workflow in n8n:
+1. Go to **Workflows** → **Import from file**
+2. Select the JSON file
+3. Configure your OpenClaw API credentials (see [Configuration](#configuration))
+4. Execute the workflow
+
 ## License
 
 MIT © [EncryptShawn](https://github.com/EncryptShawn)

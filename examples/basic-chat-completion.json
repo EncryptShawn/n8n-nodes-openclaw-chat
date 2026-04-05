@@ -1,0 +1,76 @@
+{
+  "name": "OpenClaw Basic Chat Completion",
+  "nodes": [
+    {
+      "name": "Manual Trigger",
+      "type": "n8n-nodes-base.manualTrigger",
+      "position": [250, 300],
+      "parameters": {},
+      "typeVersion": 1
+    },
+    {
+      "name": "OpenClaw Chat",
+      "type": "openClawChat",
+      "position": [450, 300],
+      "parameters": {
+        "resource": "chatCompletion",
+        "operation": "create",
+        "model": "openclaw/default",
+        "messages": {
+          "message": [
+            {
+              "role": "user",
+              "content": "List the skills installed in this OpenClaw instance"
+            }
+          ]
+        },
+        "additionalFields": {
+          "temperature": 0.7,
+          "maxTokens": 1000
+        }
+      },
+      "credentials": {
+        "openClawApi": "openClawApi"
+      },
+      "typeVersion": 1
+    },
+    {
+      "name": "Display Result",
+      "type": "n8n-nodes-base.set",
+      "position": [650, 300],
+      "parameters": {
+        "keepOnlySet": false,
+        "options": {}
+      },
+      "typeVersion": 1
+    }
+  ],
+  "connections": {
+    "Manual Trigger": {
+      "main": [
+        [
+          {
+            "node": "OpenClaw Chat",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenClaw Chat": {
+      "main": [
+        [
+          {
+            "node": "Display Result",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {},
+  "tags": [],
+  "pinData": {},
+  "versionId": "1"
+}
