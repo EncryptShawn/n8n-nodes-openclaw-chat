@@ -59,10 +59,10 @@
     "n8n-workflow": "^2.13.1",
     "prettier": "^3.2.5",
     "ts-jest": "^29.1.2",
-    "typescript": "^5.3.3"
+    "typescript": "^5.9.3"
   },
   "peerDependencies": {
-    "n8n-workflow": "^1.0.0"
+    "n8n-workflow": "^2.13.1"
   },
   "dependencies": {
     "lodash": "^4.18.1"

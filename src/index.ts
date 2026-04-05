@@ -1,4 +1,4 @@
-import { INodeType, INodeTypeBaseDescription } from 'n8n-workflow';
+import { INodeType } from 'n8n-workflow';
 import { OpenClawChat } from './nodes/OpenClaw/OpenClawChat.node';
 import { OpenClawApi } from './credentials/OpenClawApi.credentials';
 

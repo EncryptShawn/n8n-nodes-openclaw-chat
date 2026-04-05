@@ -15,7 +15,10 @@
     "sourceMap": true,
     "moduleResolution": "node",
     "allowSyntheticDefaultImports": true,
-    "ignoreDeprecations": "6.0"
+    "ignoreDeprecations": "6.0",
+    "paths": {
+      "n8n-workflow": ["./src/@types/n8n-workflow/index.d.ts"]
+    }
   },
   "include": [
     "src/**/*"

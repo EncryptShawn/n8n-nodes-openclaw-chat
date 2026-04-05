@@ -8,16 +8,22 @@ import {
 interface OpenClawApiRequestOptions {
   method: 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH';
   url: string;
-  body?: any;
-  qs?: any;
+  body?: unknown;
+  qs?: Record<string, string | number | boolean>;
   headers?: Record<string, string>;
   auth?: boolean;
+}
+
+interface HttpResponse {
+  statusCode?: number;
+  body?: unknown;
+  headers?: Record<string, string>;
 }
 
 export async function openClawApiRequest(
   this: IExecuteFunctions | ILoadOptionsFunctions | IHookFunctions | IWebhookFunctions,
   options: OpenClawApiRequestOptions,
-): Promise<any> {
+): Promise<unknown> {
   const credentials = await this.getCredentials('openClawApi');
 
   const baseUrl = (credentials.baseUrl as string).replace(/\/$/, '');
@@ -40,11 +46,12 @@ export async function openClawApiRequest(
   };
 
   try {
-    const response = await this.helpers.httpRequest(requestOptions);
+    const response = await this.helpers.httpRequest(requestOptions) as HttpResponse;
 
     // Handle HTTP error status codes
     if (response.statusCode && response.statusCode >= 400) {
-      const errorMessage = response.body?.error?.message || response.body?.message || response.body || `HTTP ${response.statusCode}`;
+      const errorBody = response.body as any;
+      const errorMessage = errorBody?.error?.message || errorBody?.message || response.body || `HTTP ${response.statusCode}`;
       throw new Error(`OpenClaw API error: ${errorMessage}`);
     }
 
@@ -52,7 +59,8 @@ export async function openClawApiRequest(
   } catch (error) {
     const err = error as any;
     if (err.response?.body) {
-      const errorMessage = err.response.body.error?.message || err.response.body.message || JSON.stringify(err.response.body);
+      const errorBody = err.response.body as any;
+      const errorMessage = errorBody.error?.message || errorBody.message || JSON.stringify(err.response.body);
       throw new Error(`OpenClaw API request failed: ${errorMessage}`);
     }
     throw new Error(`OpenClaw API request failed: ${err.message}`);
@@ -63,12 +71,12 @@ export async function openClawApiRequestAllItems(
   this: IExecuteFunctions | ILoadOptionsFunctions,
   propertyName: string,
   options: OpenClawApiRequestOptions,
-): Promise<any[]> {
-  const returnData: any[] = [];
+): Promise<unknown[]> {
+  const returnData: unknown[] = [];
   let responseData;
 
   do {
-    responseData = await openClawApiRequest.call(this, options);
+    responseData = await openClawApiRequest.call(this, options) as any;
     if (responseData[propertyName]) {
       returnData.push(...responseData[propertyName]);
     } else {
