@@ -30,6 +30,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Removed package-lock.json from version control (added to .gitignore)
 - Improved type safety by replacing `unknown` with specific types where possible
 
+## [1.0.5] - 2026-04-05
+
+### Fixed
+- Restored original custom SVG logo that was accidentally replaced with generic icon
+- SVG file now contains the correct custom claw/animal logo
+
 ## [1.0.4] - 2026-04-05
 
 ### Added
