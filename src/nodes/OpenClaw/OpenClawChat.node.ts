@@ -453,9 +453,9 @@ export class OpenClawChat implements INodeType {
       {
         displayName: 'Tool Name',
         name: 'toolName',
-        type: 'string',
+        type: 'options',
         default: '',
-        description: 'Name of the tool to invoke (e.g., "memory_search", "sessions_list")',
+        description: 'Name of the tool to invoke',
         displayOptions: {
           show: {
             resource: ['tool'],
@@ -463,6 +463,133 @@ export class OpenClawChat implements INodeType {
           },
         },
         required: true,
+        options: [
+          {
+            name: 'exec',
+            value: 'exec',
+            description: 'Shell execution',
+          },
+          {
+            name: 'process',
+            value: 'process',
+            description: 'Manage background exec sessions',
+          },
+          {
+            name: 'read',
+            value: 'read',
+            description: 'Read file contents',
+          },
+          {
+            name: 'write',
+            value: 'write',
+            description: 'Write file contents',
+          },
+          {
+            name: 'edit',
+            value: 'edit',
+            description: 'Edit file by replacing exact text',
+          },
+          {
+            name: 'apply_patch',
+            value: 'apply_patch',
+            description: 'Apply structured patches across files',
+          },
+          {
+            name: 'web_search',
+            value: 'web_search',
+            description: 'Search the web using Brave Search API',
+          },
+          {
+            name: 'web_fetch',
+            value: 'web_fetch',
+            description: 'Fetch and extract readable content from a URL',
+          },
+          {
+            name: 'browser',
+            value: 'browser',
+            description: 'Control the dedicated OpenClaw-managed browser',
+          },
+          {
+            name: 'canvas',
+            value: 'canvas',
+            description: 'Drive the node Canvas',
+          },
+          {
+            name: 'nodes',
+            value: 'nodes',
+            description: 'Discover and target paired nodes',
+          },
+          {
+            name: 'image',
+            value: 'image',
+            description: 'Analyze an image with the configured image model',
+          },
+          {
+            name: 'image_generation',
+            value: 'image_generation',
+            description: 'Generate new images or edit reference images',
+          },
+          {
+            name: 'message',
+            value: 'message',
+            description: 'Cross-channel messaging',
+          },
+          {
+            name: 'cron',
+            value: 'cron',
+            description: 'Manage Gateway cron jobs and wakeups',
+          },
+          {
+            name: 'gateway',
+            value: 'gateway',
+            description: 'Gateway management',
+          },
+          {
+            name: 'sessions_list',
+            value: 'sessions_list',
+            description: 'List sessions',
+          },
+          {
+            name: 'sessions_history',
+            value: 'sessions_history',
+            description: 'Fetch session history',
+          },
+          {
+            name: 'sessions_send',
+            value: 'sessions_send',
+            description: 'Send to another session',
+          },
+          {
+            name: 'sessions_spawn',
+            value: 'sessions_spawn',
+            description: 'Spawn sub-agent',
+          },
+          {
+            name: 'session_status',
+            value: 'session_status',
+            description: 'Session status card',
+          },
+          {
+            name: 'agents_list',
+            value: 'agents_list',
+            description: 'List targetable agents',
+          },
+          {
+            name: 'tts',
+            value: 'tts',
+            description: 'Text to speech',
+          },
+          {
+            name: 'memory_search',
+            value: 'memory_search',
+            description: 'Semantic search over memory files',
+          },
+          {
+            name: 'memory_get',
+            value: 'memory_get',
+            description: 'Safe snippet read from memory files',
+          },
+        ],
       },
       {
         displayName: 'Action',
