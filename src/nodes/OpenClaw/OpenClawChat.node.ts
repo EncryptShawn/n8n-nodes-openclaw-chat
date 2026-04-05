@@ -1,16 +1,12 @@
 import {
   IExecuteFunctions,
-  ILoadOptionsFunctions,
   INodeExecutionData,
-  INodePropertyOptions,
   INodeType,
   INodeTypeDescription,
 } from 'n8n-workflow';
 
 import {
   openClawApiRequest,
-  openClawApiRequestAllItems,
-  validateCredentials,
 } from './GenericFunctions';
 
 export class OpenClawChat implements INodeType {
@@ -596,7 +592,7 @@ export class OpenClawChat implements INodeType {
         name: 'action',
         type: 'string',
         default: '',
-        description: 'Action for the tool (e.g., "json" for sessions_list)',
+        description: 'Action for the tool (e.g., "list" for sessions_list, "poll" for process)',
         displayOptions: {
           show: {
             resource: ['tool'],
@@ -605,17 +601,295 @@ export class OpenClawChat implements INodeType {
         },
       },
       {
-        displayName: 'Arguments',
-        name: 'arguments',
-        type: 'json',
-        default: '{}',
-        description: 'JSON object of arguments to pass to the tool',
+        displayName: 'Tool Parameters',
+        name: 'toolParameters',
+        type: 'collection',
+        placeholder: 'Add Parameter',
+        default: {},
         displayOptions: {
           show: {
             resource: ['tool'],
             operation: ['invoke'],
           },
         },
+        options: [
+          // exec parameters
+          {
+            displayName: 'Command',
+            name: 'command',
+            type: 'string',
+            default: '',
+            description: 'Shell command to execute',
+            displayOptions: {
+              show: {
+                toolName: ['exec'],
+              },
+            },
+          },
+          {
+            displayName: 'Yield Milliseconds',
+            name: 'yieldMs',
+            type: 'number',
+            default: 10000,
+            description: 'Auto-background after timeout (default 10000)',
+            displayOptions: {
+              show: {
+                toolName: ['exec'],
+              },
+            },
+          },
+          {
+            displayName: 'Background',
+            name: 'background',
+            type: 'boolean',
+            default: false,
+            description: 'Immediate background mode',
+            displayOptions: {
+              show: {
+                toolName: ['exec'],
+              },
+            },
+          },
+          {
+            displayName: 'Timeout',
+            name: 'timeout',
+            type: 'number',
+            default: 1800,
+            description: 'Seconds; kills process if exceeded (default 1800)',
+            displayOptions: {
+              show: {
+                toolName: ['exec'],
+              },
+            },
+          },
+          {
+            displayName: 'Elevated',
+            name: 'elevated',
+            type: 'boolean',
+            default: false,
+            description: 'Run on host if elevated mode is enabled',
+            displayOptions: {
+              show: {
+                toolName: ['exec'],
+              },
+            },
+          },
+          {
+            displayName: 'Host',
+            name: 'host',
+            type: 'options',
+            options: [
+              { name: 'Sandbox', value: 'sandbox' },
+              { name: 'Gateway', value: 'gateway' },
+              { name: 'Node', value: 'node' },
+            ],
+            default: 'sandbox',
+            description: 'Host to run command on',
+            displayOptions: {
+              show: {
+                toolName: ['exec'],
+              },
+            },
+          },
+          {
+            displayName: 'PTY',
+            name: 'pty',
+            type: 'boolean',
+            default: false,
+            description: 'Use a real TTY',
+            displayOptions: {
+              show: {
+                toolName: ['exec'],
+              },
+            },
+          },
+          // web_search parameters
+          {
+            displayName: 'Query',
+            name: 'query',
+            type: 'string',
+            default: '',
+            description: 'Search query',
+            displayOptions: {
+              show: {
+                toolName: ['web_search'],
+              },
+            },
+          },
+          {
+            displayName: 'Count',
+            name: 'count',
+            type: 'number',
+            default: 10,
+            description: 'Number of results to return (1-10)',
+            typeOptions: {
+              minValue: 1,
+              maxValue: 10,
+            },
+            displayOptions: {
+              show: {
+                toolName: ['web_search'],
+              },
+            },
+          },
+          // web_fetch parameters
+          {
+            displayName: 'URL',
+            name: 'url',
+            type: 'string',
+            default: '',
+            description: 'URL to fetch',
+            displayOptions: {
+              show: {
+                toolName: ['web_fetch'],
+              },
+            },
+          },
+          {
+            displayName: 'Extract Mode',
+            name: 'extractMode',
+            type: 'options',
+            options: [
+              { name: 'Markdown', value: 'markdown' },
+              { name: 'Text', value: 'text' },
+            ],
+            default: 'markdown',
+            description: 'Extraction mode',
+            displayOptions: {
+              show: {
+                toolName: ['web_fetch'],
+              },
+            },
+          },
+          {
+            displayName: 'Max Characters',
+            name: 'maxChars',
+            type: 'number',
+            default: 50000,
+            description: 'Maximum characters to return',
+            displayOptions: {
+              show: {
+                toolName: ['web_fetch'],
+              },
+            },
+          },
+          // memory_search parameters
+          {
+            displayName: 'Query',
+            name: 'query',
+            type: 'string',
+            default: '',
+            description: 'Search query for memory',
+            displayOptions: {
+              show: {
+                toolName: ['memory_search'],
+              },
+            },
+          },
+          {
+            displayName: 'Max Results',
+            name: 'maxResults',
+            type: 'number',
+            default: 10,
+            description: 'Maximum number of results to return',
+            displayOptions: {
+              show: {
+                toolName: ['memory_search'],
+              },
+            },
+          },
+          // memory_get parameters
+          {
+            displayName: 'Path',
+            name: 'path',
+            type: 'string',
+            default: '',
+            description: 'Path to memory file',
+            displayOptions: {
+              show: {
+                toolName: ['memory_get'],
+              },
+            },
+          },
+          {
+            displayName: 'From Line',
+            name: 'from',
+            type: 'number',
+            default: 1,
+            description: 'Line number to start reading from (1-indexed)',
+            displayOptions: {
+              show: {
+                toolName: ['memory_get'],
+              },
+            },
+          },
+          {
+            displayName: 'Lines',
+            name: 'lines',
+            type: 'number',
+            default: 100,
+            description: 'Maximum number of lines to read',
+            displayOptions: {
+              show: {
+                toolName: ['memory_get'],
+              },
+            },
+          },
+          // sessions_list parameters
+          {
+            displayName: 'Limit',
+            name: 'limit',
+            type: 'number',
+            default: 50,
+            description: 'Maximum number of sessions to list',
+            displayOptions: {
+              show: {
+                toolName: ['sessions_list'],
+              },
+            },
+          },
+          // sessions_send parameters
+          {
+            displayName: 'Session Key',
+            name: 'sessionKey',
+            type: 'string',
+            default: '',
+            description: 'Target session key or ID',
+            displayOptions: {
+              show: {
+                toolName: ['sessions_send'],
+              },
+            },
+          },
+          {
+            displayName: 'Message',
+            name: 'message',
+            type: 'string',
+            default: '',
+            description: 'Message to send',
+            typeOptions: {
+              rows: 4,
+            },
+            displayOptions: {
+              show: {
+                toolName: ['sessions_send'],
+              },
+            },
+          },
+          // Fallback JSON arguments for other tools
+          {
+            displayName: 'JSON Arguments',
+            name: 'jsonArgs',
+            type: 'json',
+            default: '{}',
+            description: 'JSON object of arguments (for tools without specific parameters)',
+            displayOptions: {
+              hide: {
+                toolName: ['exec', 'web_search', 'web_fetch', 'memory_search', 'memory_get', 'sessions_list', 'sessions_send'],
+              },
+            },
+          },
+        ],
       },
     ],
   };
@@ -706,13 +980,114 @@ export class OpenClawChat implements INodeType {
             returnData.push({ json: response });
           }
         } else if (resource === 'tool' && operation === 'invoke') {
+          const toolName = this.getNodeParameter('toolName', i) as string;
+          const action = this.getNodeParameter('action', i, '') as string;
+          const toolParameters = this.getNodeParameter('toolParameters', i, {}) as Record<string, unknown>;
+          
+          // Build args based on tool name
+          let args: Record<string, unknown> = {};
+          
+          if (toolName === 'exec') {
+            args = {
+              command: String(toolParameters.command || ''),
+              yieldMs: Number(toolParameters.yieldMs),
+              background: Boolean(toolParameters.background),
+              timeout: Number(toolParameters.timeout),
+              elevated: Boolean(toolParameters.elevated),
+              host: String(toolParameters.host || 'sandbox'),
+              pty: Boolean(toolParameters.pty),
+            };
+            // Remove undefined or NaN values
+            Object.keys(args).forEach(key => {
+              const val = args[key];
+              if (val === undefined || val === null || (typeof val === 'number' && isNaN(val))) {
+                delete args[key];
+              }
+            });
+          } else if (toolName === 'web_search') {
+            args = {
+              query: String(toolParameters.query || ''),
+              count: Number(toolParameters.count),
+            };
+            Object.keys(args).forEach(key => {
+              const val = args[key];
+              if (val === undefined || val === null || (typeof val === 'number' && isNaN(val))) {
+                delete args[key];
+              }
+            });
+          } else if (toolName === 'web_fetch') {
+            args = {
+              url: String(toolParameters.url || ''),
+              extractMode: String(toolParameters.extractMode || 'markdown'),
+              maxChars: Number(toolParameters.maxChars),
+            };
+            Object.keys(args).forEach(key => {
+              const val = args[key];
+              if (val === undefined || val === null || (typeof val === 'number' && isNaN(val))) {
+                delete args[key];
+              }
+            });
+          } else if (toolName === 'memory_search') {
+            args = {
+              query: String(toolParameters.query || ''),
+              maxResults: Number(toolParameters.maxResults),
+            };
+            Object.keys(args).forEach(key => {
+              const val = args[key];
+              if (val === undefined || val === null || (typeof val === 'number' && isNaN(val))) {
+                delete args[key];
+              }
+            });
+          } else if (toolName === 'memory_get') {
+            args = {
+              path: String(toolParameters.path || ''),
+              from: Number(toolParameters.from),
+              lines: Number(toolParameters.lines),
+            };
+            Object.keys(args).forEach(key => {
+              const val = args[key];
+              if (val === undefined || val === null || (typeof val === 'number' && isNaN(val))) {
+                delete args[key];
+              }
+            });
+          } else if (toolName === 'sessions_list') {
+            args = {
+              limit: Number(toolParameters.limit),
+            };
+            Object.keys(args).forEach(key => {
+              const val = args[key];
+              if (val === undefined || val === null || (typeof val === 'number' && isNaN(val))) {
+                delete args[key];
+              }
+            });
+          } else if (toolName === 'sessions_send') {
+            args = {
+              sessionKey: String(toolParameters.sessionKey || ''),
+              message: String(toolParameters.message || ''),
+            };
+            Object.keys(args).forEach(key => {
+              const val = args[key];
+              if (val === undefined || val === null || val === '') {
+                delete args[key];
+              }
+            });
+          } else {
+            // Use JSON arguments for other tools
+            const jsonArgs = String(toolParameters.jsonArgs || '{}');
+            try {
+              args = JSON.parse(jsonArgs);
+            } catch (e) {
+              throw new Error(`Invalid JSON arguments: ${(e as Error).message}`);
+            }
+          }
+          
           const response = await openClawApiRequest.call(this, {
             method: 'POST',
             url: '/tools/invoke',
             body: {
-              tool: this.getNodeParameter('toolName', i) as string,
-              action: this.getNodeParameter('action', i, '') as string,
-              args: JSON.parse(this.getNodeParameter('arguments', i, '{}') as string),
+              tool: toolName,
+              action: action,
+              args: args,
             },
           });
           returnData.push({ json: response });
@@ -721,12 +1096,12 @@ export class OpenClawChat implements INodeType {
         if (this.continueOnFail()) {
           returnData.push({
             json: {
-              error: (error as any).message,
+              error: error instanceof Error ? error.message : String(error),
             },
           });
           continue;
         }
-        throw error as Error;
+        throw error;
       }
     }
 

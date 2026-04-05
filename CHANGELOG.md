@@ -30,6 +30,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Removed package-lock.json from version control (added to .gitignore)
 - Improved type safety by replacing `unknown` with specific types where possible
 
+## [1.0.4] - 2026-04-05
+
+### Added
+- Structured parameter fields for key OpenClaw tools:
+  - `exec`: command, yieldMs, background, timeout, elevated, host, pty
+  - `web_search`: query, count
+  - `web_fetch`: url, extractMode, maxChars
+  - `memory_search`: query, maxResults
+  - `memory_get`: path, from, lines
+  - `sessions_list`: limit
+  - `sessions_send`: sessionKey, message
+- Tool Parameters collection that shows relevant fields based on selected tool
+- JSON arguments fallback for other tools
+
+### Changed
+- Replaced generic JSON arguments with structured UI fields for common tools
+- Improved user experience with tool-specific parameter validation
+
 ## [1.0.3] - 2026-04-05
 
 ### Added
