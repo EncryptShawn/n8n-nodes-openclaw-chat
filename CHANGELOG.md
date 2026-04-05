@@ -22,3 +22,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Insecure HTTPS toggle for development
 - Detailed documentation with examples
 - TypeScript source code with linting and testing setup
+
+### Fixed
+- TypeScript compilation errors with proper type definitions
+- Updated module resolution to Node16 for TypeScript 5.9.3 compatibility
+- Removed package-lock.json from version control (added to .gitignore)
+- Improved type safety by replacing `unknown` with specific types where possible

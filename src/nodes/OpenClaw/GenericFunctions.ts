@@ -23,7 +23,7 @@ interface HttpResponse {
 export async function openClawApiRequest(
   this: IExecuteFunctions | ILoadOptionsFunctions | IHookFunctions | IWebhookFunctions,
   options: OpenClawApiRequestOptions,
-): Promise<unknown> {
+): Promise<any> {
   const credentials = await this.getCredentials('openClawApi');
 
   const baseUrl = (credentials.baseUrl as string).replace(/\/$/, '');
@@ -71,8 +71,8 @@ export async function openClawApiRequestAllItems(
   this: IExecuteFunctions | ILoadOptionsFunctions,
   propertyName: string,
   options: OpenClawApiRequestOptions,
-): Promise<unknown[]> {
-  const returnData: unknown[] = [];
+): Promise<any[]> {
+  const returnData: any[] = [];
   let responseData;
 
   do {
