@@ -30,6 +30,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Removed package-lock.json from version control (added to .gitignore)
 - Improved type safety by replacing `unknown` with specific types where possible
 
+## [1.0.1] - 2026-04-05
+
+### Changed
+- Removed streaming operations ('Create Streaming') from chatCompletion and response resources
+- Updated displayOptions to only show for 'create' operation
+- Hardcoded `stream: false` in all request bodies to ensure OpenClaw returns non-streaming responses (n8n compatibility)
+- Removed unused Stream parameter fields
+
+### Fixed
+- n8n compatibility issue where streaming responses caused requests to hang
+
 ## [0.1.0] - 2026-04-05
 
 ### Added
