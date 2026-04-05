@@ -609,6 +609,9 @@ export class OpenClawChat implements INodeType {
         displayName: 'Exec Parameters',
         name: 'execParameters',
         type: 'collection',
+        typeOptions: {
+          multipleValues: false,
+        },
         placeholder: 'Add Parameter',
         default: {},
         displayOptions: {
@@ -990,13 +993,49 @@ export class OpenClawChat implements INodeType {
             returnData.push({ json: response });
           }
         } else if (resource === 'tool' && operation === 'invoke') {
+          const toolName = this.getNodeParameter('toolName', i) as string;
+          const action = this.getNodeParameter('action', i, '') as string;
+          let args = {};
+          
+          // Tool-specific parameter collections
+          if (toolName === 'exec') {
+            const execParams = this.getNodeParameter('execParameters', i, {}) as any;
+            args = { ...execParams };
+          } else if (toolName === 'web_search') {
+            const webSearchParams = this.getNodeParameter('webSearchParameters', i, {}) as any;
+            args = { ...webSearchParams };
+          } else if (toolName === 'web_fetch') {
+            const webFetchParams = this.getNodeParameter('webFetchParameters', i, {}) as any;
+            args = { ...webFetchParams };
+          } else if (toolName === 'memory_search') {
+            const memorySearchParams = this.getNodeParameter('memorySearchParameters', i, {}) as any;
+            args = { ...memorySearchParams };
+          } else if (toolName === 'memory_get') {
+            const memoryGetParams = this.getNodeParameter('memoryGetParameters', i, {}) as any;
+            args = { ...memoryGetParams };
+          } else if (toolName === 'sessions_list') {
+            const sessionsListParams = this.getNodeParameter('sessionsListParameters', i, {}) as any;
+            args = { ...sessionsListParams };
+          } else if (toolName === 'sessions_send') {
+            const sessionsSendParams = this.getNodeParameter('sessionsSendParameters', i, {}) as any;
+            args = { ...sessionsSendParams };
+          } else {
+            // Fallback to JSON arguments
+            const jsonArgs = this.getNodeParameter('jsonArguments', i, '{}') as string;
+            try {
+              args = JSON.parse(jsonArgs);
+            } catch (error) {
+              throw new Error(`Invalid JSON arguments: ${(error as Error).message}`);
+            }
+          }
+          
           const response = await openClawApiRequest.call(this, {
             method: 'POST',
             url: '/tools/invoke',
             body: {
-              tool: this.getNodeParameter('toolName', i) as string,
-              action: this.getNodeParameter('action', i, '') as string,
-              args: JSON.parse(this.getNodeParameter('arguments', i, '{}') as string),
+              tool: toolName,
+              action,
+              args,
             },
           });
           returnData.push({ json: response });

@@ -5,6 +5,14 @@ All notable changes to the `n8n-nodes-openclaw-chat` project will be documented 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.8] - 2026-04-05
+
+### Fixed
+- Fixed bug where tool invocation used incorrect parameter name "arguments" instead of "jsonArguments"
+- Implemented tool-specific parameter collections (exec, web_search, web_fetch, memory_search, memory_get, sessions_list, sessions_send)
+- Added proper parameter collection for exec tool with multipleValues false
+- Improved error handling for JSON arguments parsing
+
 ## [1.0.7] - 2026-04-05
 
 ### Added
