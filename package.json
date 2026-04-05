@@ -10,14 +10,14 @@
     "automation"
   ],
   "license": "MIT",
-  "homepage": "https://github.com/EncryptShawn/npm-nodes-openclaw-chat",
+  "homepage": "https://github.com/EncryptShawn/n8n-nodes-openclaw-chat",
   "author": {
     "name": "EncryptShawn",
     "email": "shawn@example.com"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/EncryptShawn/npm-nodes-openclaw-chat.git"
+    "url": "git+https://github.com/EncryptShawn/n8n-nodes-openclaw-chat.git"
   },
   "engines": {
     "node": ">=18.0.0",
